@@ -2,11 +2,31 @@ version: 2
 jobs:
   build:
     machine: true
+    environment:
+      DOCKER_LAYER_CACHE_NAME: "docker_cache"
     steps:
       - checkout
+      - restore_cache:
+          name: Restore docker image cache
+          key: key-{{ checksum "Dockerfile" }}
       - run:
-          name: Check docker images
-          command: docker images
+          name: Load docker image layer cache
+          command: if [ -f /caches/${DOCKER_LAYER_CACHE_NAME}.tar.gz ]; then gunzip -c /caches/${DOCKER_LAYER_CACHE_NAME}.tar.gz | docker load; docker images; fi
+      - run:
+          name: Build application docker image
+          command: docker build --tag ${DOCKER_LAYER_CACHE_NAME} .
+      - run:
+          name: Save docker image layer
+          command: |
+            mkdir -p /caches
+            docker build --tag ${DOCKER_LAYER_CACHE_NAME} . | grep '\-\-\->' | grep -v 'Using cache' | sed -e 's/[ >-]//g' > /tmp/layers.txt
+            docker save $(cat /tmp/layers.txt) | gzip < /caches/${DOCKER_LAYER_CACHE_NAME}.tar.gz
+      - run:
+          name: Save docker image cache
+          key: key-{{ checksum "Dockerfile" }}
+          paths:
+            - /caches/
+
 #    working_directory: ~/code
 #    docker:
 #      - image: circleci/android:api-28-alpha
