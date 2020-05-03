@@ -21,7 +21,7 @@ jobs:
             mkdir -p .caches
             mkdir -p .tmp
             docker build --tag ${DOCKER_LAYER_CACHE_NAME} . | grep '\-\-\->' | grep -v 'Using cache' | sed -e 's/[ >-]//g' > .tmp/layers.txt
-            docker save $(cat .tmp/layers.txt) | gzip < .caches/${DOCKER_LAYER_CACHE_NAME}.tar.gz
+            docker save $(cat .tmp/layers.txt) -o .caches/${DOCKER_LAYER_CACHE_NAME}.tar.gz
       - save_cache:
           name: Save docker image cache
           key: key-{{ checksum "Dockerfile" }}
