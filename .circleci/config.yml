@@ -1,26 +1,20 @@
 aliases:
   - &restore_gradle_cache
-    restore_cache:
-      name: Restoring gradle cache
-      key: supply-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+    run:
+      command: echo "restore_gradle_cache"
 
   - &restore_robolectric_cache
-    restore_cache:
-      name: Restoring robolectric cache
-      key: supply-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}-{{ checksum "robolectric_hermetic_build_setup.gradle" }}
+    run:
+      command: echo "restore_robolectric_cache"
 
   - &restore_bundle_cache
-    restore_cache:
-      name: Restoring bundle cache
-      key: bundle-{{ checksum "Gemfile.lock" }}
+    run:
+      command: echo "restore_bundle_cache"
 
   - &environment
     working_directory: ~/code
     docker:
       - image: circleci/android:api-28-alpha
-    environment:
-      JVM_OPTS: -Xmx3200m
-    resource_class: large
 
 version: 2
 workflows:
