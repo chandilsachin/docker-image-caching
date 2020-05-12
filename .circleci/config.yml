@@ -40,40 +40,7 @@ jobs:
       - run:
           name: Bundle install
           command: echo "Done"
-#      - save_cache:
-#          name: Save bundle cache
-#          paths:
-#            - vendor/bundle
-#          key: bundle-{{ checksum "Gemfile.lock" }}
-#      - run:
-#          name: Download dependencies
-#          command: ./gradlew androidDependencies
-#      - run:
-#          name: Download robolectric dependencies
-#          command: ./gradlew filesForHermeticBuild
-#      - save_cache:
-#          name: Save gradle cache
-#          paths:
-#            - "~/.gradle"
-#            - "~/.gradle/caches/modules-2"
-#            - "~/.m2"
-#          key: supply-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
-#      - save_cache:
-#          name: Save robolectric cache
-#          paths:
-#            - "app/libs/robolectric_libs"
-#            - "app/src/test/resources/robolectric_sdks"
-#          key: supply-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}-{{ checksum "robolectric_hermetic_build_setup.gradle" }}
-#      - run:
-#          name: Compile source
-#          command: ./gradlew compileReleaseJavaWithJavac compileDebugJavaWithJavac compileReleaseKotlin compileDebugKotlin
-#      - run:
-#          name: Store dependency graph
-#          command: bundle exec quality/danger/store_dependency_graph.rb
-#      - persist_to_workspace:
-#          root: .
-#          paths:
-#            - ./
+
 
   lint:
     <<: *environment
@@ -84,10 +51,6 @@ jobs:
       - run:
           name: Run checkStyle, pmd and lint
           command: echo "Done"
-#      - persist_to_workspace:
-#          root: .
-#          paths:
-#            - app/build/reports/lint
 
   tests:
     <<: *environment
@@ -99,12 +62,21 @@ jobs:
       - run:
           name: Run tests
           command: echo "Done"
-#      - store_test_results:
-#          path: app/build/reports/tests
-#      - persist_to_workspace:
-#          root: .
-#          paths:
-#            - app/build/reports/tests
+      - run:
+          name: test splitting output
+          command: |
+            # Get list of classnames of tests that should run on this node
+            #cd app/src/test/java
+            CLASSNAMES=$(circleci tests glob "**/*Test.*" \
+              | cut -c 1- | sed 's@/@.@g' \
+              | sed 's/\.[^.]*$//' \
+              | circleci tests split --total=2 --split-by=timings --timings-type=classname)
+            #cd ./../../../..
+            # Format the arguments to "./gradlew test"
+            GRADLE_ARGS=$(echo $CLASSNAMES | awk '{for (i=1; i<=NF; i++) print "--tests",$i}')
+            echo "Prepared arguments for Gradle: $GRADLE_ARGS"
+            ./gradlew testIndiaReleaseUnitTest $GRADLE_ARGS
+
 
   assemble_debug_apks:
     <<: *environment
