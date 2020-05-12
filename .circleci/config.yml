@@ -66,6 +66,8 @@ jobs:
           name: test splitting output
           command: |
             # Get list of classnames of tests that should run on this node
+            pwd
+            ls
             cd app
             cd src/test/java
             CLASSNAMES=$(circleci tests glob "**/*Test.*" \
