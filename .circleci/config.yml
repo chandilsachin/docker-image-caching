@@ -1,10 +1,10 @@
 restore_cache1: &restore_cache1
-  - run1:
-      command: echo "Restoring cache1"
+  run:
+    command: echo "Restoring cache1"
 
 restore_cache2: &restore_cache2
-  - run:
-      command: echo "Restoring cache2"
+  run:
+    command: echo "Restoring cache2"
 
 version: 2.1
 jobs:
