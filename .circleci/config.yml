@@ -20,7 +20,6 @@ aliases:
       key: bundle-{{ checksum "Gemfile.lock" }}
 
   - &environment
-    working_directory: ~/code
     docker:
       - image: circleci/android:api-28-alpha
 
