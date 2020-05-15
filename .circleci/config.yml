@@ -66,23 +66,6 @@ jobs:
       - run:
           name: Run tests
           command: echo "Done"
-      - run:
-          name: test splitting output
-          command: |
-            # Get list of classnames of tests that should run on this node
-            pwd
-            ls
-            cd app
-            cd src/test/java
-            CLASSNAMES=$(circleci tests glob "**/*Test.*" \
-              | cut -c 1- | sed 's@/@.@g' \
-              | sed 's/\.[^.]*$//' \
-              | circleci tests split --total=2 --split-by=timings --timings-type=classname)
-            cd ./../../../..
-            # Format the arguments to "./gradlew test"
-            GRADLE_ARGS=$(echo $CLASSNAMES | awk '{for (i=1; i<=NF; i++) print "--tests",$i}')
-            echo "Prepared arguments for Gradle: $GRADLE_ARGS"
-            echo testIndiaReleaseUnitTest $GRADLE_ARGS
 
 
   upload_app_metrics_manifest:
