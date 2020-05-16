@@ -48,7 +48,7 @@ jobs:
       - *restore_bundle_cache
       - run:
           name: Git command
-          command: git fetch origin master && echo $(git diff --shortstat origin/master)
+          command: echo $(git diff --shortstat origin/master)
       - run:
           name: Check commands
           command: ls -la
