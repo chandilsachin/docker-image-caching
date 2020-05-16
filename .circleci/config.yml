@@ -48,7 +48,7 @@ jobs:
       - *restore_bundle_cache
       - run:
           name: Git command
-          command: git diff
+          command: git diff --shortstat master
 
 
   lint:
