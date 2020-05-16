@@ -51,7 +51,7 @@ jobs:
           command: echo $(git diff --shortstat master)
       - run:
           name: Git command
-          command: echo $(git log)
+          command: git log
       - run:
           name: Check commands
           command: ls -la
