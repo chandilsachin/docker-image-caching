@@ -21,7 +21,7 @@ aliases:
 
   - &environment
     docker:
-      - image: circleci/android:api-28-alpha
+      - image: cimg/base:2020.01
     environment:
       TERM: xterm
 
@@ -49,6 +49,12 @@ jobs:
       - run:
           name: Git command
           command: git diff --shortstat master
+      - run:
+          name: Check commands
+          command: ls -la
+      - run:
+          name: Check commands
+          command: sudo apt-get install git
 
 
   lint:
