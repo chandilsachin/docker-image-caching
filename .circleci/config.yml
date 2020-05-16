@@ -35,10 +35,6 @@ workflows:
       - tests:
           requires:
             - dependencies
-      - upload_app_metrics_manifest:
-          requires:
-            - tests
-            - lint
 
 jobs:
   dependencies:
@@ -62,6 +58,9 @@ jobs:
       - run:
           name: Run checkStyle, pmd and lint
           command: echo "Done"
+      - run:
+          name: Git command
+          command: git diff
 
   tests:
     <<: *environment
