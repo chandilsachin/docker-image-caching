@@ -48,17 +48,10 @@ jobs:
       - *restore_bundle_cache
       - run:
           name: Git command
-          command: ➜ git fetch origin master && echo $(git diff --shortstat master)
-      - run:
-          name: Git command
-          command: git log
+          command: git fetch origin master && echo $(git diff --shortstat master)
       - run:
           name: Check commands
           command: ls -la
-      - run:
-          name: Check commands
-          command: sudo apt-get install git
-
 
   lint:
     <<: *environment
