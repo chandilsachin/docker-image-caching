@@ -22,6 +22,8 @@ aliases:
   - &environment
     docker:
       - image: circleci/android:api-28-alpha
+    environment:
+      TERM: xterm
 
 version: 2
 workflows:
