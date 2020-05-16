@@ -45,8 +45,8 @@ jobs:
       - *restore_robolectric_cache
       - *restore_bundle_cache
       - run:
-          name: Bundle install
-          command: echo "Done"
+          name: Git command
+          command: git diff
 
 
   lint:
@@ -58,9 +58,6 @@ jobs:
       - run:
           name: Run checkStyle, pmd and lint
           command: echo "Done"
-      - run:
-          name: Git command
-          command: git diff
 
   tests:
     <<: *environment
